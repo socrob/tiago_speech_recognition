@@ -1,0 +1,74 @@
+food:
+  cornflakes:
+    - corn
+  pea soup:
+    - soup
+  pancake mix:
+    - pancake
+  hagelslag:
+    - haggle
+    - bagel
+  sausages:
+    - sausage
+  mayonnaise:
+    - mayo
+    - majo
+
+fruits:
+  pear:
+    - bear
+  strawberry:
+    - berry
+
+snacks:
+  stroopwafel:
+    - wafel
+    - stroop
+    - troop
+    - stroop off
+    - strip off
+  candy:
+    - andy
+  liquorice:
+    - liquor
+  crisps:
+    - crisp
+  pringles:
+    - pringle
+  tictac:
+    - tic tac
+
+drinks:
+  cola:
+    - coka
+  ice tea:
+    - tea
+  big coke:
+    - coke
+  fanta:
+    - fun
+    - funny
+  ice tea:
+    - nice tea
+  dubbelfris:
+    - double
+    - double free
+    - double three
+    - double freeze
+
+names:
+  hayley:
+    - hailey
+    - haley
+  emma:
+    - hema
+  sara:
+    - sarah
+  laura:
+    - lore
+  fleur:
+    - flor
+    - flower
+    - flora
+  gabrielle:
+    - gabriel

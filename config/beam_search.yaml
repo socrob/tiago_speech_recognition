@@ -1,0 +1,5 @@
+# For explanation of beam search see: https://huggingface.co/blog/how-to-generate
+
+num_beams: 4
+num_return_sequences: 4
+max_length: 50

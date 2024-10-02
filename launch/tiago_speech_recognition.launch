@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- What microphone we want to use -->
+    <arg name="microphone_device" default="default"/>
+    
+    <!-- What we want to launch besides speech recognition -->
+    <arg name="launch_mic" default="true"/>
+    <arg name="launch_keyword" default="true"/>
+    
+    <!-- Set to true in order to record debug wav files -->
+    <arg name="save_wav" default="true"/>
+
+    <!-- ASR node name -->
+    <arg name="asr_node_name" default="tiago_speech_recognition"/>
+
+    <!-- ASR generation config -->
+    <arg name="ASR_generation_config" default="$(find tiago_speech_recognition)/config/beam_search.yaml"/>
+
+    <!-- Topics names -->
+    <arg name="transcript_topic" default="/tiago_speech_recognition/transcript"/>
+    <arg name="audio_topic" default="/microphone_node/audio"/>
+    
+    <!-- Microphone node -->
+    <include file="$(find microphone_node)/launch/microphone_node.launch" if="$(arg launch_mic)">
+        <arg name="microphone_device" value="$(arg microphone_device)" />
+    </include>
+    
+    <!-- Keyword detection node -->
+    <include file="$(find keyword_detection)/launch/keyword_detection.launch" if="$(arg launch_keyword)">
+        <arg name="output_topic" value="$(arg asr_node_name)/event_in" />
+        <arg name="audio_topic" value="$(arg audio_topic)" />
+    </include>
+    
+    <!-- ASR node -->
+    <include file="$(find tiago_speech_recognition)/launch/speech_recognition_node.launch">
+        <arg name="save_wav" value="$(arg save_wav)" />
+        <arg name="node_name" value="$(arg asr_node_name)" />
+        <arg name="transcript_topic" value="$(arg transcript_topic)" />
+        <arg name="audio_topic" value="$(arg audio_topic)" />
+        <arg name="generation_config" value="$(arg ASR_generation_config)"/>
+    </include>
+</launch>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Respeaker -->
+    <arg name="silence_level" default="300"/>
+    <arg name="energy_threshold_ratio" default="1.5"/>
+
+    <!-- Id of the model in the Hugging Face hub -->
+    <arg name="model" default="openai/whisper-small.en"/>
+    
+    <!-- Set to true in order to record debug wav files -->
+    <arg name="save_wav" default="false"/>
+
+    <!-- Node name -->
+    <arg name="node_name" default="tiago_speech_recognition"/>
+
+    <!-- Topics for input and output -->
+    <arg name="transcript_topic" default="~transcript"/>
+    <arg name="audio_topic" default="/microphone_node/audio"/>
+
+    <!-- The path for the file with the generation config -->
+    <arg name="generation_config" default="$(find tiago_speech_recognition)/config/beam_search.yaml"/>
+
+    <!-- Launch the node -->
+    <node  pkg="tiago_speech_recognition" type="tiago_speech_node.py" name="$(arg node_name)" required="true" output="screen">
+        <param name="~energy_threshold_ratio" value="$(arg energy_threshold_ratio)"/>
+        <param name="~silence_level" value="$(arg silence_level)"/>
+        <param name="~model_id" value="$(arg model)"/>
+        <param name="~save_wav" value="$(arg save_wav)"/>
+        <param name="~transcript_topic" value="$(arg transcript_topic)"/>
+        <param name="~audio_topic" value="$(arg audio_topic)"/>
+        <param name="~generation_config" value="$(arg generation_config)"/>
+    </node>
+</launch>

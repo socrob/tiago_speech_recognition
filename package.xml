@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>tiago_speech_recognition</name>
+  <version>0.0.0</version>
+  <description>A speech recognition package based on Hugging Face Transformer speech recognition pipeline</description>
+  
+  <maintainer email="afonso.certo@tecnico.ulisboa.pt"> Afonso Certo</maintainer>
+  
+  <license>MIT</license>
+  
+  <author email="afonso.certo@tecnico.ulisboa.pt">Afonso Certo</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>google_speech_recognition</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msg</build_depend>
+
+  <build_export_depend>google_speech_recognition</build_export_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>std_msg</build_export_depend>
+
+  <exec_depend>google_speech_recognition</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msg</exec_depend>
+</package>

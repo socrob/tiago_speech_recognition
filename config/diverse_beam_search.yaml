@@ -1,0 +1,5 @@
+num_beams: 4
+num_return_sequences: 4
+num_beam_groups: 4
+diversity_penalty: 5.0
+max_length: 50
