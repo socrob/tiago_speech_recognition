@@ -6,7 +6,7 @@ import rospkg
 
 # Import service messages and data types
 from std_msgs.msg import String
-from google_speech_recognition.msg import ASRNBestList, ASRHypothesis
+from tiago_speech_recognition.msg import ASRNBestList, ASRHypothesis
 from audio_common_msgs.msg import AudioData
 
 # from actions_tiago_ros.tiago_api import TiagoAPI
@@ -155,7 +155,7 @@ class TiagoASR():
                 self.frame_length = rospy.get_param("/microphone_node/frame_length")
             else:
                 self.frame_length = 512
-                rospy.logwarn(f"Frame length not set. Using default value of {self.frame_length}")
+                rospy.logwarn(f"Frame lenght not set. Using default value of {self.frame_length}")
                 
             rospy.logdebug(f"Microphone settings: sample rate={self.sample_rate}, frame lenght={self.frame_length}")
 
@@ -266,7 +266,7 @@ class TiagoASR():
                     except Empty:
                         continue
                     
-                    # Frame of silence                
+                    # Frame of silence
                     if audioop.rms(audio_frames[-1], pyaudio.get_sample_size(pyaudio.paInt16)) < self.energy_threshold:
                         silence_frames_until_stop -= 1
                     
@@ -300,12 +300,17 @@ class TiagoASR():
 
                 # Write audio to a WAV file
                 if self.save_wav:
-                    audio_path = getFilePathFromRospkg(
-                        "tiago_speech_recognition", 
-                        datetime.now().strftime("data/recording_%Y-%m-%d_%H-%M-%S.wav"))
-                    
-                    with open(audio_path, "wb") as f:
-                        f.write(audio)
+                    rospack = rospkg.RosPack()
+
+                    try:
+                        audio_path = rospack.get_path(tiago_speech_recognition) + \
+                            datetime.now().strftime("data/recording_%Y-%m-%d_%H-%M-%S.wav")
+                        
+                        with open(audio_path, "wb") as f:
+                            f.write(audio)
+
+                    except Exception as e:
+                        rospy.logerr(f"Error while trying to save the log file: {e}")
 
                 # Write audio to buffer
                 self.recordings_buffer.put(audio)
