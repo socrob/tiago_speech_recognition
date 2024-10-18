@@ -1,1 +1,0 @@
-ASRHypothesis[] hypothesis

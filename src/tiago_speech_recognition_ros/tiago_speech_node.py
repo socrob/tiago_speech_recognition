@@ -6,7 +6,7 @@ import rospkg
 
 # Import service messages and data types
 from std_msgs.msg import String
-from tiago_speech_recognition.msg import ASRNBestList, ASRHypothesis
+from socrob_speech_msgs.msg import ASRNBestList, ASRHypothesis
 from audio_common_msgs.msg import AudioData
 
 # from actions_tiago_ros.tiago_api import TiagoAPI
@@ -42,7 +42,7 @@ class TiagoASR():
         self.rospack = rospkg.RosPack()
 
         #Publishers
-        self.output_pub = rospy.Publisher(rospy.get_param("~output_topic", "~transcript"), 
+        self.output_pub = rospy.Publisher(rospy.get_param("~transcript_topic", "~transcript"), 
                                           ASRNBestList, queue_size = 5)
 
         #Subscriptions
