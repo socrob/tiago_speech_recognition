@@ -17,11 +17,16 @@ The TIAGo Speech Recognition package is responsible for enabling speech recognit
   - [transformers](https://github.com/huggingface/transformers)
   - [speech_recognition](https://pypi.org/project/SpeechRecognition/)
   - [socrob_speech_msgs](https://github.com/socrob/socrob_speech_msgs) 
+  - [audio_common](https://wiki.ros.org/audio_common)
 
 ## Installation
 
 ### 0. Install the message modules
-Follow the installation instructions in the [socrob_speech_msgs](https://github.com/socrob/socrob_speech_msgs).
+Follow the installation instructions in the [socrob_speech_msgs](https://github.com/socrob/socrob_speech_msgs). Then install the `audio_common` package with:
+
+```bash
+sudo apt-get install ros-noetic-audio-common
+```
 
 ### 1. Clone the repository
 ```bash
