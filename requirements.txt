@@ -1,0 +1,2 @@
+transformers==4.37.2
+SpeechRecognition==3.9.0
