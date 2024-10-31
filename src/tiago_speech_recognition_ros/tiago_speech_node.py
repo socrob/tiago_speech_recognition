@@ -303,8 +303,8 @@ class TiagoASR():
                     rospack = rospkg.RosPack()
 
                     try:
-                        audio_path = rospack.get_path(tiago_speech_recognition) + \
-                            datetime.now().strftime("data/recording_%Y-%m-%d_%H-%M-%S.wav")
+                        audio_path = rospack.get_path("tiago_speech_recognition") + \
+                            datetime.now().strftime("/data/recording_%Y-%m-%d_%H-%M-%S.wav")
                         
                         with open(audio_path, "wb") as f:
                             f.write(audio)
