@@ -92,7 +92,7 @@ class TiagoASR():
             # Simplify the data to exclude object categories
             processed_errors = {}
             for category in common_errors.values():
-                processed_errors += category
+                processed_errors.update(category)
 
             # This parameter will have the following structure:
             # {

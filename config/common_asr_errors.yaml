@@ -1,6 +1,7 @@
 food:
   cornflakes:
     - corn
+    - cotton flakes
   pea soup:
     - soup
   pancake mix:
@@ -72,3 +73,20 @@ names:
     - flora
   gabrielle:
     - gabriel
+
+food:
+  strawberry jello:
+    - strawberry giallo
+    - strawberry yellow
+  chocolate jello:
+    - chocolate giallo
+    - chocolate yellow
+  coffee grounds:
+    - coffee ground
+
+toys:
+  rubik's cube:
+    - rubik's
+    - rubik's tube
+    - rubik's screw
+    - rubiks cube
