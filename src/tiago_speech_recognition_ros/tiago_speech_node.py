@@ -3,6 +3,7 @@
 import speech_recognition as sr
 import rospy
 import rospkg
+from yaml import safe_load
 
 # Import service messages and data types
 from std_msgs.msg import String
@@ -12,7 +13,6 @@ from audio_common_msgs.msg import AudioData
 # from actions_tiago_ros.tiago_api import TiagoAPI
 # tiago_api = TiagoAPI()
 
-from my_robot_common.modules.common import getFilePathFromRospkg
 import tiago_speech_recognition_ros.whisper as asr_engine
 
 # ros independent imports
@@ -72,6 +72,38 @@ class TiagoASR():
         self.audio_buffer = Queue(maxsize=2)
         self.recordings_buffer = Queue()
         self.audio_bytes_buffer = []
+
+        # Publish in a parameter the list of common ASR errors
+        try:
+            errors_path = f"{self.rospack.get_path('tiago_speech_recognition')}/config/common_asr_errors.yaml"
+
+            with open(errors_path, "r") as f:
+                common_errors = safe_load(f)
+
+            # Set the full common ASR errors
+            # This parameter will have the following structure:
+            # {
+            #     category: {
+            #         correct name: [common errors]
+            #     }
+            # }
+            rospy.set_param("~common_asr_errors_categorized", common_errors)
+
+            # Simplify the data to exclude object categories
+            processed_errors = {}
+            for category in common_errors.values():
+                processed_errors.update(category)
+
+            # This parameter will have the following structure:
+            # {
+            #     correct name: [common errors]
+            # }
+            rospy.set_param("~common_asr_errors", processed_errors)
+
+        except Exception as e:
+            rospy.logwarn(f"Error while trying to load common ASR errors: {e}")
+            rospy.set_param("~common_asr_errors_categorized", {})
+            rospy.set_param("~common_asr_errors", {})
 
         rospy.loginfo("ASR interface initialized")
 
@@ -303,8 +335,8 @@ class TiagoASR():
                     rospack = rospkg.RosPack()
 
                     try:
-                        audio_path = rospack.get_path(tiago_speech_recognition) + \
-                            datetime.now().strftime("data/recording_%Y-%m-%d_%H-%M-%S.wav")
+                        audio_path = rospack.get_path("tiago_speech_recognition") + \
+                            datetime.now().strftime("/data/recording_%Y-%m-%d_%H-%M-%S.wav")
                         
                         with open(audio_path, "wb") as f:
                             f.write(audio)

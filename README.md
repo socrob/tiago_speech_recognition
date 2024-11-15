@@ -17,11 +17,16 @@ The TIAGo Speech Recognition package is responsible for enabling speech recognit
   - [transformers](https://github.com/huggingface/transformers)
   - [speech_recognition](https://pypi.org/project/SpeechRecognition/)
   - [socrob_speech_msgs](https://github.com/socrob/socrob_speech_msgs) 
+  - [audio_common](https://wiki.ros.org/audio_common)
 
 ## Installation
 
 ### 0. Install the message modules
-Follow the installation instructions in the [socrob_speech_msgs](https://github.com/socrob/socrob_speech_msgs).
+Follow the installation instructions in the [socrob_speech_msgs](https://github.com/socrob/socrob_speech_msgs). Then install the `audio_common` package with:
+
+```bash
+sudo apt-get install ros-noetic-audio-common
+```
 
 ### 1. Clone the repository
 ```bash
@@ -110,5 +115,26 @@ The decoding method for the transformer can be personalized with custom YAML fil
 The following config files are included in the `config` folder:
 
 - `beam_search.yaml`: Configuration for beam search algorithm.
-- `common_asr_errors.yaml`: Common ASR errors and their handling mechanisms.
 - `diverse_beam_search.yaml`: Configuration for diverse beam search algorithm.
+
+## Common ASR Errors
+
+When the node is initialized it will load a list of common ASR errors loaded in the `common_asr_errors.yaml` file in the config folder. This information will be published in two parameters so it can be used in upstream modules to potentially correct these errors:
+
+- `tiago_speech_recognition/common_asr_errors`: Will contain a dictionary mapping each word to every defined possible misspleling. See example:
+```yaml
+pear: [bear]
+crisps: [crisp]
+pringles: [pringle]
+tictac: [tic tac]
+```
+
+- `tiago_speech_recognition/common_asr_errors_categorized`: Will contain the full data present in the `common_asr_errors.yaml` file, which is the same as the `common_asr_errors`, but divided into categories. See example:
+```yaml
+fruits:
+  pear: [bear]
+snacks:
+  crisps: [crisp]
+  pringles: [pringle]
+  tictac: [tic tac]
+```
