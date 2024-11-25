@@ -88,3 +88,49 @@ toys:
     - rubik's tube
     - rubik's screw
     - rubiks cube
+
+rooms:
+  inria kitchen:
+    - enriya kitchen
+    - enria kitchen
+    - rear kitchen
+    - in-re-kitchen
+
+  dlr kitchen:
+    - dealer kitchen
+    - alarm kitchen
+    - vlr kitchen
+
+locations:
+  dlr dishwasher:
+    - dealer dishwasher
+    - alarm dishwasher
+    - vlr dishwasher
+  dlr counter:
+    - dealer counter
+    - alarm counter
+    - vlr counter
+  dlr drawer:
+    - dealer drawer
+    - alarm drawer
+    - vlr drawer
+  inria dishwasher:
+    - enriya dishwasher
+    - enria dishwasher
+    - rear dishwasher
+    - in-re-dishwasher
+  inria cabinet:
+    - enriya cabinet
+    - enria cabinet
+    - rear cabinet
+    - in-re-cabinet
+  inria drawer:
+    - enriya drawer
+    - enria drawer
+    - rear drawer
+    - in-re-drawer
+  inria counter:
+    - enriya counter
+    - enria counter
+    - rear counter
+    - in-re-counter
