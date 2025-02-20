@@ -134,7 +134,7 @@ class TiagoASR():
         if command[0] != "e":
             return
 
-        # A recording event, formated as "e_record_{silence_seconds}" where {silence_seconds}
+        # A recording event, formatted as "e_record_{silence_seconds}" where {silence_seconds}
         # is the number of seconds the recording will run for if no sound is detected and is 
         # an optional parameter
         if command[1] == "record" and self.listening:
@@ -158,7 +158,7 @@ class TiagoASR():
             gc.collect()
             torch.cuda.empty_cache()
 
-            rospy.loginfo("Stopped listenning")
+            rospy.loginfo("Stopped listening")
 
         # e_start will load the model
         elif command[1] == "start" and not self.listening and not self.loading_model:
@@ -187,9 +187,9 @@ class TiagoASR():
                 self.frame_length = rospy.get_param("/microphone_node/frame_length")
             else:
                 self.frame_length = 512
-                rospy.logwarn(f"Frame lenght not set. Using default value of {self.frame_length}")
+                rospy.logwarn(f"Frame length not set. Using default value of {self.frame_length}")
                 
-            rospy.logdebug(f"Microphone settings: sample rate={self.sample_rate}, frame lenght={self.frame_length}")
+            rospy.logdebug(f"Microphone settings: sample rate={self.sample_rate}, frame length={self.frame_length}")
 
             self.seconds_per_frame = self.frame_length / self.sample_rate
             
@@ -200,8 +200,16 @@ class TiagoASR():
 
             rospy.loginfo(f"Loading ASR model '{self.model_id}'...")
 
+            # Check language
+            if rospy.has_param("~language"):
+                language = rospy.get_param("~language")
+                rospy.loginfo(f"Language set to {language}.{' Output will be translated to english.' if language != 'english' else ''}")
+            else:
+                language = "english"
+                rospy.logwarn(f"Language not set. Using default value of {language}")
+
             # Create a pipeline for ASR
-            self.model = asr_engine.load_model(self.model_id, device=self.device)
+            self.model = asr_engine.load_model(self.model_id, device=self.device, source_language=language)
 
             rospy.loginfo(f"Loaded model!")
 
@@ -223,7 +231,7 @@ class TiagoASR():
             if self.save_wav:
                 rospy.logwarn("Saving every recording as a wav file. To stop this set save_wav parameter to false.")
 
-            # Calibrate energy thereshold for silence
+            # Calibrate energy threshold for silence
             if rospy.has_param("~energy_threshold_ratio"):
                 energy_threshold_ratio = rospy.get_param("~energy_threshold_ratio")
             else:
@@ -245,7 +253,7 @@ class TiagoASR():
 
             self.energy_threshold = silence_level * energy_threshold_ratio
 
-            rospy.loginfo("Energy thereshold set to %f" % self.energy_threshold)
+            rospy.loginfo("Energy threshold set to %f" % self.energy_threshold)
             
             self.listening = True
             self.loading_model = False
@@ -261,7 +269,7 @@ class TiagoASR():
             self.audio_buffer.put(bytes(msg.data))
 
     def recording_thread_target(self):
-        # Lenght of a pause required to stop recording
+        # Length of a pause required to stop recording
         pause_threshold = 0.8
         frames_in_pause_threshold = pause_threshold / self.seconds_per_frame
 
@@ -285,7 +293,7 @@ class TiagoASR():
 
             # Started recording
             if self.recording:
-                rospy.loginfo(f"Recording thread is listenning for a maximum of {self.max_wait} seconds")
+                rospy.loginfo(f"Recording thread is listening for a maximum of {self.max_wait} seconds")
                 rospy.set_param("~recording", True)
 
                 # See how many silence frames until recording is stopped
@@ -307,10 +315,10 @@ class TiagoASR():
                         silence_frames_until_stop = frames_in_pause_threshold
 
                 self.recording = False
-                rospy.loginfo("Recording thread stopped listenning")
+                rospy.loginfo("Recording thread stopped listening")
                 rospy.set_param("~recording", False)
 
-                # Remove silence frames at beggining
+                # Remove silence frames at beginning
                 while audioop.rms(audio_frames[0], pyaudio.get_sample_size(pyaudio.paInt16)) < self.energy_threshold:
                     audio_frames.pop(0)
 
@@ -319,7 +327,7 @@ class TiagoASR():
 
                 # If there is no audio frames continue
                 if len(audio_frames) == 0:
-                    rospy.logwarn("Recording thread Could not detect a sound above energy thereshold.")
+                    rospy.logwarn("Recording thread Could not detect a sound above energy threshold.")
                     continue
 
                 # Remove silence frames at the end

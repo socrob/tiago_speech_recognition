@@ -4,7 +4,9 @@ from math import exp
 
 from typing import Tuple, List
 
-def load_model(model_id: str, device: str) -> Tuple[WhisperProcessor, WhisperForConditionalGeneration]:
+def load_model(model_id: str, 
+               device: str,
+               source_language: str = "english") -> Tuple[WhisperProcessor, WhisperForConditionalGeneration]:
     """Loads the model and processor needed for speech recognition
 
     Args:
@@ -16,7 +18,13 @@ def load_model(model_id: str, device: str) -> Tuple[WhisperProcessor, WhisperFor
     """
     processor = WhisperProcessor.from_pretrained(model_id)
     model = WhisperForConditionalGeneration.from_pretrained(model_id).to(device)
-    model.config.forced_decoder_ids = None
+
+    # If we are using a source language different from english we need to force the decoder to use the correct language
+    if source_language != "english":
+        model.config.forced_decoder_ids = processor.get_decoder_prompt_ids(language=source_language, task="translate")
+
+    else:
+        model.config.forced_decoder_ids = None
 
     return processor, model
 
@@ -53,7 +61,7 @@ def transcribe_audio(
     output = model.generate(input_features.to(device), **generation_kwargs)
     
     # decode token ids to text
-    transcription = processor.batch_decode(output.sequences, skip_special_tokens=True)
+    transcription = processor.batch_decode(output.sequences, skip_special_tokens=False)
 
     return transcription, [exp(confidence) for confidence in output.sequences_scores]
     

@@ -20,6 +20,9 @@
     <!-- The path for the file with the generation config -->
     <arg name="generation_config" default="$(find tiago_speech_recognition)/config/beam_search.yaml"/>
 
+    <!-- Language people are talking. Whisper will translate it to english -->
+    <arg name="language" default="english"/>
+
     <!-- Launch the node -->
     <node  pkg="tiago_speech_recognition" type="tiago_speech_node.py" name="$(arg node_name)" required="true" output="screen">
         <param name="~energy_threshold_ratio" value="$(arg energy_threshold_ratio)"/>
@@ -29,5 +32,6 @@
         <param name="~transcript_topic" value="$(arg transcript_topic)"/>
         <param name="~audio_topic" value="$(arg audio_topic)"/>
         <param name="~generation_config" value="$(arg generation_config)"/>
+        <param name="~language" value="$(arg language)"/>
     </node>
 </launch>
