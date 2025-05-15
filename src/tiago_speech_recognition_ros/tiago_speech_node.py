@@ -293,7 +293,7 @@ class TiagoASR():
 
             # Started recording
             if self.recording:
-                rospy.loginfo(f"Recording thread is listening for a maximum of {self.max_wait} seconds")
+                rospy.loginfo(f"Recording thread will listen for {self.max_wait}s if no sound is detected.")
                 rospy.set_param("~recording", True)
 
                 # See how many silence frames until recording is stopped
@@ -301,12 +301,19 @@ class TiagoASR():
 
                 # Listen until there is silence
                 while self.recording and silence_frames_until_stop > 0:
+                    # Get audio from buffer
+                    # If there is no audio in the buffer, continue
                     try:
                         audio_frames.append(self.audio_buffer.get(block=True, timeout=1))
                     except Empty:
-                        continue
+                        # We waited for 1 second to see if there is audio
+                        # If there is no audio, the microphone probably stopped recording
+                        rospy.logwarn(f"Recording thread could not get an audio frame for 1 second. "\
+                                      "Will stop recording.")
+                        break
                     
                     # Frame of silence
+                    rospy.logdebug(f"{self.max_wait} / {self.seconds_per_frame} = {silence_frames_until_stop} | {audioop.rms(audio_frames[-1], pyaudio.get_sample_size(pyaudio.paInt16))} < {self.energy_threshold}")
                     if audioop.rms(audio_frames[-1], pyaudio.get_sample_size(pyaudio.paInt16)) < self.energy_threshold:
                         silence_frames_until_stop -= 1
                     

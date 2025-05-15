@@ -61,7 +61,7 @@ def transcribe_audio(
     output = model.generate(input_features.to(device), **generation_kwargs)
     
     # decode token ids to text
-    transcription = processor.batch_decode(output.sequences, skip_special_tokens=False)
+    transcription = processor.batch_decode(output.sequences, skip_special_tokens=True)
 
     return transcription, [exp(confidence) for confidence in output.sequences_scores]
     
